@@ -70,9 +70,29 @@ export default function Login() {
     }));
   };
 
+
+   const insertUserdata = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('Users')
+        .insert({ id: "hellyeah" });
+
+      if (error) {
+        console.error('Error inserting user data:', error.message);
+        setMessage('An error occurred while inserting user data.');
+      } else {
+        console.log('User data inserted:', data);
+        setMessage('User data inserted successfully.');
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error.message);
+      setMessage('An unexpected error occurred.');
+    }
+  };
+
+
   const loginWithGoogle = async () => {
-    console.log('gtr')
-    setMessage(null); // Reset message
+    setMessage(null);
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -80,16 +100,10 @@ export default function Login() {
 
       if (error) {
         setMessage(`Google login error: ${error.message}`);
-      } else {
-        setMessage('Google login successful!');
-        console.log(data);
-        supabase.from('users').insert({
-            id: 'sdfsd',
-            name: 'lskjdf',
-            email: 'lskddddjf',
-            username: 'sldkjf'
-        })
-        router.refresh();
+      }
+      else{
+        // const a = supabase.auth.getUser()
+        insertUserdata()
       }
     } catch (error) {
       console.error('OAuth login error:', error);
