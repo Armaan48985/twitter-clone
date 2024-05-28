@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Login() {
+
+
   const [data, setData] = useState({
     email: '',
     password: ''
@@ -62,6 +64,7 @@ export default function Login() {
     console.log('clicked')
   };
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setData((prev) => ({
@@ -94,6 +97,8 @@ export default function Login() {
   const loginWithGoogle = async () => {
     setMessage(null);
     try {
+      
+     
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
       });

@@ -13,7 +13,7 @@ const AuthCallback = () => {
         console.error('Error handling authentication redirect:', error.message);
         setMessage('An unexpected error occurred during authentication.');
       } else {
-        const user = session.user;
+        const user = session?.user;
         if (user) {
           console.log('Authenticated user:', user);
           // Insert user data into the users table
