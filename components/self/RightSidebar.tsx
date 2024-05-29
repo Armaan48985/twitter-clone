@@ -16,7 +16,7 @@ interface Props {
   const RightSidebar = ({options} : Props) => {
    
     return (
-      <section className='ml-5'>
+      <section className='ml-5 h-auto'>
         <UserSearch options={options}/>
         <SubscribetoPremiumBox/>
         <Whatshappening/>

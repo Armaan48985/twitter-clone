@@ -3,12 +3,15 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Homee from "./(root)/home/page";
+import Sidebar from "@/components/self/Sidebar";
+import RightSidebar from "@/components/self/RightSidebar";
 // import { v4 as uuidv4 } from 'uuid';
 
 export default function Home() {
 
   const router = useRouter()
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState("");
   const logout = async () => {
       await supabase.auth.signOut()
 
@@ -39,7 +42,7 @@ export default function Home() {
     try {
       await supabase.auth.getSession().then((session) => {
         if(session) {
-          setCurrentUser(session?.data?.session.user.user_metadata.full_name)
+          setCurrentUser(session?.data?.session.user.user_metadata.full_name || "")
         }
       })
       let { data: users } = await supabase
@@ -65,12 +68,11 @@ export default function Home() {
 
   console.log(currentUser)
   return (
-    <>Lesss goooo
-      <button onClick={insertUserdata} className="bg-green-900">add to users</button>
-      <button onClick={insertTweetdata} className="bg-blue-900">add a tweet by this user</button>
-      <button className="bg-black text-white" onClick={logout}>log out</button>
-      <h1>Welcome {currentUser}</h1>
-    </>
+    <div className="bg-black flex gap-2">
+      <Sidebar/>
+      <Homee currentUser={currentUser}/>
+      <RightSidebar options={[]}/>
+    </div>
   );
 }
 

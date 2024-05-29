@@ -13,7 +13,7 @@ const Sidebar = () => {
   const path = usePathname();
 
   return (
-    <main className="w-[300px] min-h-[90vh] text-left text-white pt-6 flex flex-col gap-20 items-start pl-6 sticky top-0 luffy">
+    <main className="w-[300px] h-[90vh] text-left text-white pt-6 flex flex-col gap-20 items-start pl-6 sticky top-0 luffy">
       <div>
         <span className="text-3xl pl-4 flex">
           <FaXTwitter />
@@ -23,7 +23,7 @@ const Sidebar = () => {
           {data.map((e, i): any => {
             return (
               <Link href={e.link || "/"} key={i}>
-                <li className="flex items-center gap-3">
+                <li className="flex items-center gap-3 hover:bg-gray-900">
                   <Button variant="ghost" className="flex gap-6 py-6 pr-14">
                     <span className="text-3xl">
                       {path === e.link ? e.activeIcon : e.icon}

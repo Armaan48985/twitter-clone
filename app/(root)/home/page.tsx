@@ -20,17 +20,21 @@ import { redirect } from 'next/navigation'
 import Postmaker from '@/components/self/Postmaker'
 
 
-const page = () => {
+const Homee = ({currentUser}:{currentUser: string}) => {
 
   return (
       <main className='flex'>
         <section className='main-section'>
           <div>
             <Tabs defaultValue="account" className="w-auto h-[1000px] relative">
-              <TabsList className="grid w-full grid-cols-2 border-b-2 border-slate-900 luffy pt-0 pb-16">
-                <TabsTrigger value="account" className="text-md py-5 hover:bg-[#191919] rounded-none mr-10" >For You</TabsTrigger>
-                <TabsTrigger value="password" className="text-md mr-16` py-5 hover:bg-[#191919] rounded-none">Following</TabsTrigger>
-                <span className='absolute right-5 text-xl hover:bg-gray-900 p-2 rounded-full'><IoSettingsOutline /></span>
+              <TabsList className="flex justify-evenly w-full bg-green-500 p-0">
+                  <div className='w-9/10 bg-blue-600 flex-center p-0 m-0'>
+                    <TabsTrigger value="account" className="w-full">For You</TabsTrigger>
+                    <TabsTrigger value="password" className="w-full">Following</TabsTrigger>
+                  </div>
+                  <div className='w-1/10 bg-blue-900'>
+                    <span className='text-xl hover:bg-gray-900 p-2 rounded-full'><IoSettingsOutline /></span>
+                  </div>
               </TabsList>
 
               <TabsContent value="account" className='flex-col'>
@@ -57,4 +61,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Homee
