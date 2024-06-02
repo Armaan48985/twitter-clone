@@ -13,9 +13,9 @@ import { createClient } from "@supabase/supabase-js";
 import { postTweet } from '@/app/supabaseFunc'
 import { supabase } from '@/lib/supabase'
 
-const Postmaker = () => {
+const Postmaker = ({tweet, setTweet}:any) => {
 
-  const[tweet, setTweet] = useState<string>("");
+
 
   return (
     <div className='w-full h-auto border-b-[1px] border-[#3A4249] p-4 flex'>

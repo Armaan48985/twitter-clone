@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 const username = () => {
 
-    const[username, setUsername] = useState()
+    const[username, setUsername] = useState('')
 
 
 

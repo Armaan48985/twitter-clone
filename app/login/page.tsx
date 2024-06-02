@@ -16,28 +16,6 @@ export default function Login() {
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
 
-  const login = async () => {
-    setMessage(null); // Reset message
-    try {
-      const { data: dataUser, error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password
-      });
-
-      if (error) {
-        setMessage(`Login error: ${error.message}`);
-      } else {
-        setMessage('Login successful!');
-        console.log(dataUser);
-        const {data:userdata, error} = await supabase.auth.getUser()
-        insertUserdata(userdata.user?.user_metadata.full_name)
-        router.refresh();
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setMessage('An unexpected error occurred during login.');
-    }
-  };
 
   // const signUp = async () => { // Fixed function name typo
   //   setMessage(null); // Reset message
@@ -77,22 +55,51 @@ export default function Login() {
   };
 
 
-   const insertUserdata = async (namee:string) => {
+   const insertUserdata = async (namee:string ) => {
     try {
+
+      const {data: userId} = await supabase.auth.getUser()
+
       const { data, error } = await supabase
         .from('users')
-        .insert({ name: namee });
+        .insert({
+          name: namee
+           });
 
       if (error) {
         console.error('Error inserting user data:', error.message);
         setMessage('An error occurred while inserting user data.');
       } else {
         console.log('User data inserted:', data);
-        setMessage('User data inserted successfully.');
+        setMessage('User data inserted successfully.'); 
       }
     } catch (error) {
       console.error('Unexpected error:', error);
       setMessage('An unexpected error occurred.');
+    }
+  };
+
+  
+  const login = async () => {
+    setMessage(null); // Reset message
+    try {
+      const { data: dataUser, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password
+      });
+
+      if (error) {
+        setMessage(`Login error: ${error.message}`);
+      } else {
+        setMessage('Login successful!');
+        console.log(dataUser);
+        const {data:userdata, error} = await supabase.auth.getUser()
+        insertUserdata(userdata.user?.user_metadata.full_name)
+        router.refresh();
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setMessage('An unexpected error occurred during login.');
     }
   };
 
@@ -109,7 +116,7 @@ export default function Login() {
       }
       else{
         const {data:userdata, error} = await supabase.auth.getUser()
-        insertUserdata(userdata.user?.user_metadata.full_name)
+        insertUserdata(userdata.user?.user_metadata.full_name || "john")
       }
     } catch (error) {
       console.error('OAuth login error:', error);
@@ -134,7 +141,7 @@ export default function Login() {
 
           <div className="mt-10 flex flex-col gap-5">
             <input className="pl-3 pr-16 outline-none hover:scale-[1.03] duration-500 rounded-lg placeholder:text-gray-400 text-start py-1 text-black" type="email" name="email" onChange={handleChange} value={data.email} placeholder="Enter your mail"/>
-            <input className="pl-3 pr-16 outline-none hover:scale-[1.03] duration-500 rounded-lg placeholder:text-gray-400 text-start py-1 text-black" type="password" name="password" onChange={handleChange} value={data.password} placeholder="*******"/>
+            <input className="pl-3 pr-16 outline-none hover:scale-[1.03] duration-500 rounded-lg placeholder:text-gray-400 text-start py-1 text-black" type="text" name="password" onChange={handleChange} value={data.password} placeholder="*******"/>
           </div>
 
           <button onClick={login} className="px-16 py-2 bg-red-400 text-xl hover:scale-[1.03] font-bold mt-8 rounded-lg uppercase">Login</button>

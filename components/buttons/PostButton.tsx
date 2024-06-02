@@ -6,16 +6,20 @@ import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const PostButton = ({classname, name, tweet, setTweet}:any) => {
-
+  
   const router = useRouter()
+
+  const post = async () => {
+      await postTweet(tweet)
+      router.refresh()
+      console.log('working af')
+      setTweet('')
+  }
+
   return (
     <Button 
         variant="default" 
-        onClick={() => {
-          postTweet(tweet) 
-          router.refresh()
-          setTweet('')
-        }} 
+        onClick={post} 
         className={`bg-[#1B8CD8] rounded-3xl ${classname} hover:bg-[#3598db]`}
       >
       {name}

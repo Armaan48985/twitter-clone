@@ -3,7 +3,6 @@ import { supabase } from "@/lib/supabase"
 
 export const postTweet = async (tweet:string) => {
 
-    
     if(tweet.length > 0) {
       console.log('working')
     try {

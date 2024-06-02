@@ -66,7 +66,7 @@ export default function Home() {
     }
   };
 
-  console.log(currentUser)
+  
   return (
     <div className="bg-black flex gap-2">
       <Sidebar/>

@@ -27,24 +27,20 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
 
   const logOut = async () => {
     await supabase.auth.signOut()
-
     router.refresh();
   }
 
   const[tweets, setTweets] = useState<any[]>([]);
+  const[tweet, setTweet] = useState<string>("");
 
 
   useEffect(() => {
       const getSession = async () => {
         const {data, error} = await supabase.auth.getSession();
-
-        // console.log(data)
       }
 
       const getUser = async () => {
         const {data, error} = await supabase.auth.getUser();
-
-        // console.log(data)
       }
 
       const getTweets = async () => {
@@ -52,22 +48,17 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
           .from('tweets')
           .select('tweet');
 
-          console.log('df')
-
         if (error) {
           console.error('Error fetching tweets:', error.message);
         } else {
           setTweets(data.map(tweet => tweet.tweet))
-          // console.log(data)
         }
       }
 
       getSession()
       getUser() 
       getTweets()
-  }, [])
-
-  console.log(tweets)
+  }, [tweet])
 
   return (
       <main className='flex'>
@@ -87,8 +78,8 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
             </TabsList>
 
               <TabsContent value="account" className='flex-col'>
-                <Postmaker/>
-                  content
+                <Postmaker  tweet={tweet} setTweet={setTweet}/>
+                  <h1 onClick={() => router.refresh()} className='cursor-pointer'>click to refresh</h1>
                   {tweets.map((tweet) => (
                     <p>{tweet}</p>
                   ))}
