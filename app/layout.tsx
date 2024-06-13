@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./GlobalRedux/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-          <body className="w-full flex justify-center bg-black text-white">{children}</body>
+          <body className="w-full flex justify-center bg-black text-white">
+            <Providers>
+              {children}
+            </Providers>
+          </body>
     </html>
   );
 }

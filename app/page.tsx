@@ -6,20 +6,16 @@ import { useState } from "react";
 import Homee from "./(root)/home/page";
 import Sidebar from "@/components/self/Sidebar";
 import RightSidebar from "@/components/self/RightSidebar";
-// import { v4 as uuidv4 } from 'uuid';
+
 
 export default function Home() {
-
   const router = useRouter()
   const [currentUser, setCurrentUser] = useState("");
   const logout = async () => {
       await supabase.auth.signOut()
-
       router.refresh()
   }
 
-
-  
   const insertUserdata = async () => {
     try {
       const { data, error } = await supabase
@@ -42,7 +38,7 @@ export default function Home() {
     try {
       await supabase.auth.getSession().then((session) => {
         if(session) {
-          setCurrentUser(session?.data?.session.user.user_metadata.full_name || "")
+          setCurrentUser(session?.data?.session?.user.user_metadata.full_name || "")
         }
       })
       let { data: users } = await supabase
@@ -61,7 +57,8 @@ export default function Home() {
       } else {
         console.log('User data inserted:', data);
       }
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Unexpected error:', error);
     }
   };
@@ -75,4 +72,3 @@ export default function Home() {
     </div>
   );
 }
-

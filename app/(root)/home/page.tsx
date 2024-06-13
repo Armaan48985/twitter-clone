@@ -19,11 +19,15 @@ import { Button } from '@/components/ui/button'
 import { redirect, useRouter } from 'next/navigation'
 import Postmaker from '@/components/self/Postmaker'
 import { supabase } from '@/lib/supabase'
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
+import { RootState } from '@/app/GlobalRedux/store'
 
 
 const   Homee = ({currentUser}:{currentUser: string}) => {
 
   const router = useRouter()
+  const dispatch = useDispatch();
 
   const logOut = async () => {
     await supabase.auth.signOut()
@@ -35,14 +39,6 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
 
 
   useEffect(() => {
-      const getSession = async () => {
-        const {data, error} = await supabase.auth.getSession();
-      }
-
-      const getUser = async () => {
-        const {data, error} = await supabase.auth.getUser();
-      }
-
       const getTweets = async () => {
         const {data, error} = await supabase
           .from('tweets')
@@ -55,10 +51,10 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
         }
       }
 
-      getSession()
-      getUser() 
       getTweets()
-  }, [tweet])
+  }, [])
+
+  
 
   return (
       <main className='flex'>
@@ -81,8 +77,9 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
                 <Postmaker  tweet={tweet} setTweet={setTweet}/>
                   <h1 onClick={() => router.refresh()} className='cursor-pointer'>click to refresh</h1>
                   {tweets.map((tweet) => (
-                    <p>{tweet}</p>
+                      <p>{tweet}</p>
                   ))}
+                  
               </TabsContent>
               <TabsContent value="password">
                 <div className='w-full h-20 border-b-[1px] border-[#3A4249]'>

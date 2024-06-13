@@ -1,13 +1,15 @@
 'use client';
-
 import { supabase } from "@/lib/supabase";
+import { error } from "console";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../GlobalRedux/Feature/counter/counterSlice";
+import { insertUserdata } from "../GlobalFunctions";
+
 
 export default function Login() {
-
-
   const [data, setData] = useState({
     email: '',
     password: ''
@@ -15,36 +17,22 @@ export default function Login() {
 
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
+  const[user, setUser] = useState<any>(null);
 
+  useEffect(() => {
+    const doo = async () => {
+      const {data} = await supabase.auth.getUser();
+      const{data:session} = await supabase.auth.getSession();
 
-  // const signUp = async () => { // Fixed function name typo
-  //   setMessage(null); // Reset message
-  //   try {
-  //     const { data: dataUser, error } = await supabase.auth.signUp({
-  //       email: data.email,
-  //       password: data.password
-  //     });
+      if(data.user?.id){
+         insertUserdata(data.user?.user_metadata.full_name, data.user?.id)
+      }
+    }
 
-  //     if (error) {
-  //       setMessage(`Signup error: ${error.message}`);
-  //     } else {
-  //       setMessage('Signup successful! Please check your email to confirm.');
-  //       console.log(dataUser);
-  //       supabase.from('users').insert({
-  //           id: 'sdfsd',
-  //           name: 'lskjdf',
-  //           email: 'lskddddjf',
-  //           username: 'sldkjf'
-  //       })
-  //       router.refresh();
-  //     }
-  //   } catch (error) {
-  //     console.error('Signup error:', error);
-  //     setMessage('An unexpected error occurred during signup.');
-  //   }
-  //   console.log('clicked')
-  // };
+    doo()
+  }, [])
 
+  console.log(user)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,32 +41,6 @@ export default function Login() {
       [name]: value,
     }));
   };
-
-
-   const insertUserdata = async (namee:string ) => {
-    try {
-
-      const {data: userId} = await supabase.auth.getUser()
-
-      const { data, error } = await supabase
-        .from('users')
-        .insert({
-          name: namee
-           });
-
-      if (error) {
-        console.error('Error inserting user data:', error.message);
-        setMessage('An error occurred while inserting user data.');
-      } else {
-        console.log('User data inserted:', data);
-        setMessage('User data inserted successfully.'); 
-      }
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      setMessage('An unexpected error occurred.');
-    }
-  };
-
   
   const login = async () => {
     setMessage(null); // Reset message
@@ -92,9 +54,6 @@ export default function Login() {
         setMessage(`Login error: ${error.message}`);
       } else {
         setMessage('Login successful!');
-        console.log(dataUser);
-        const {data:userdata, error} = await supabase.auth.getUser()
-        insertUserdata(userdata.user?.user_metadata.full_name)
         router.refresh();
       }
     } catch (error) {
@@ -109,20 +68,20 @@ export default function Login() {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/username`
+        },
       });
-
+  
       if (error) {
         setMessage(`Google login error: ${error.message}`);
-      }
-      else{
-        const {data:userdata, error} = await supabase.auth.getUser()
-        insertUserdata(userdata.user?.user_metadata.full_name || "john")
       }
     } catch (error) {
       console.error('OAuth login error:', error);
       setMessage('An unexpected error occurred during Google login.');
     }
   };
+
 
   return (
     <div className="w-full min-h-screen flex-center bg-[#333]">
@@ -155,5 +114,3 @@ export default function Login() {
     </div>
   );
 }
-
-
