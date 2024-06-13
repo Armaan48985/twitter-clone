@@ -1,4 +1,5 @@
 'use client'
+import { insertUserdata } from '@/app/GlobalFunctions'
 import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,48 +10,67 @@ import { useDispatch } from 'react-redux'
 
 const username = () => {
 
-    const[username, setUsername] = useState('')
+    const[usernamee, setUsername] = useState('')
     const[message, setMessage] = useState('')
 
     const router = useRouter()
     const dispatch = useDispatch()
 
     const submitUsername = async () => {
-        if(username === ''){
-            setMessage('username cannot be empty')
-            return
-        } 
-
-        if(username.length < 3){
-            setMessage('username must be atleast 3 characters')
-            return
+      if (usernamee === '') {
+        setMessage('Username cannot be empty');
+        return;
+      }
+  
+      if (usernamee.length < 3) {
+        setMessage('Username must be at least 3 characters');
+        return;
+      }
+  
+      if (usernamee.length > 10) {
+        setMessage('Username must be at most 10 characters');
+        return;
+      }
+  
+      try {
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError) throw userError;
+  
+        if (!userData?.user?.id || !userData?.user?.user_metadata?.full_name) {
+          setMessage('User data is incomplete');
+          return;
         }
-
-        if(username.length > 10){
-            setMessage('username must be atmost 10 characters')
-            return
+  
+        console.log('User data:', userData);
+  
+        const { error: insertError, data: insertData } = await supabase
+          .from('users')
+          .insert([{
+            id: userData.user.id,
+            name: userData.user.user_metadata.full_name,
+            username: usernamee
+          }]);
+  
+        if (insertError) {
+          console.error('Supabase insert error:', insertError);
+          setMessage(`Insert error: ${insertError.message}`);
+          return;
         }
-
-        const {data, error} = await supabase.auth.getUser();
-        const {data:userdata} = await supabase
-                  .from('users')
-                  .insert({id: data?.user?.id,name: data.user?.user_metadata.full_name , username: 'lskd'})
-
-        if(error){
-          console.log(error)
-        }
-        else{
-          dispatch(setUserData({
-            userId: data?.user?.id,
-            Name: data?.user?.user_metadata.full_name,
-            username: username
-          }))
-
-          router.push('/')
-        }
-
-    }
-
+  
+        console.log('Insert response:', insertData);
+  
+        dispatch(setUserData({
+          userId: userData.user.id,
+          Name: userData.user.user_metadata.full_name,
+          username: usernamee
+        }));
+  
+        router.push('/');
+      } catch (error) {
+        console.error('Unexpected error occurred:', error);
+        setMessage('An unexpected error occurred. Please try again.'+ error);
+      }
+    };
 
   return (
     <div className='w-full min-h-screen flex-center'>
@@ -59,8 +79,9 @@ const username = () => {
           <div className='bg-blue-900 p-5 rounded-md text-white'>
               <h1 className='py-4 text-xl font-bold pr-10'>Choose a username for you !</h1>
               <Input
-                placeholder="Username"
-                value={username}
+                type='text'
+                placeholder="Enter username"
+                value={usernamee}
                 onChange={(e) => setUsername(e.target.value)}
                 className='border-gray-900 bg-transparent'
                 />

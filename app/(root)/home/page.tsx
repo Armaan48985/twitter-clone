@@ -22,6 +22,7 @@ import { supabase } from '@/lib/supabase'
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { RootState } from '@/app/GlobalRedux/store'
+import TweetBox from '@/components/self/TweetBox'
 
 
 const   Homee = ({currentUser}:{currentUser: string}) => {
@@ -75,9 +76,8 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
 
               <TabsContent value="account" className='flex-col'>
                 <Postmaker  tweet={tweet} setTweet={setTweet}/>
-                  <h1 onClick={() => router.refresh()} className='cursor-pointer'>click to refresh</h1>
                   {tweets.map((tweet) => (
-                      <p>{tweet}</p>
+                      <TweetBox tweet={tweet}/>
                   ))}
                   
               </TabsContent>

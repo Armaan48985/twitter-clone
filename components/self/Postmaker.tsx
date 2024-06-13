@@ -18,7 +18,7 @@ const Postmaker = ({tweet, setTweet}:any) => {
 
 
   return (
-    <div className='w-full h-auto border-b-[1px] border-[#3A4249] p-4 flex'>
+    <div className='w-full h-auto border-b-[1px] border-[var(--primary-border)] p-4 flex'>
     <div className='w-[50px] h-full'>
       <span className='bg-gray-700 text-[10px] p-3 rounded-full'>img</span>
     </div>

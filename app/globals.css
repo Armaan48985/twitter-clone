@@ -5,6 +5,7 @@
 :root{
   --bg-gray: rgb(31, 41, 55);
   --primary-blue: rgb(29 155 240);
+  --primary-border: #3A4249;
 }
 
 .primary-blue{

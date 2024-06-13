@@ -6,10 +6,13 @@ import { useSelector } from 'react-redux';
 
 const Profile = () => {
 
-  const { userId, Name } = useSelector((state: RootState) => ({
+  const { userId, Name, username } = useSelector((state: RootState) => ({
     userId: state.counter.userId,
     Name: state.counter.Name,
+    username: state.counter.username
   }));
+
+  console.log(username)
 
   useEffect(() => {
     const getUser = async () => {
