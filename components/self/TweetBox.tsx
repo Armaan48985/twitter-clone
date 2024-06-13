@@ -19,7 +19,7 @@ const TweetBox = ({tweet}:{tweet: string}) => {
             <span className='bg-gray-500 p-3 rounded-full inline-block cursor-pointer'><LuUser2 /></span>
         </div>
 
-        <div className='ml-3 w-full pr-2'>
+        <div className='ml-3 w-full'>
 
             <div className='flex-between py-1'>
                <div className='flex-center gap-3'>
