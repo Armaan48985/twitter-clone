@@ -35,40 +35,28 @@ const username = () => {
       try {
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError) throw userError;
-  
-        if (!userData?.user?.id || !userData?.user?.user_metadata?.full_name) {
-          setMessage('User data is incomplete');
-          return;
-        }
-  
+
         console.log('User data:', userData);
-  
-        const { error: insertError, data: insertData } = await supabase
+
+          const { error: insertError, data: insertData } = await supabase
           .from('users')
           .insert([{
             id: userData.user.id,
             name: userData.user.user_metadata.full_name,
             username: usernamee
-          }]);
-  
-        if (insertError) {
-          console.error('Supabase insert error:', insertError);
-          setMessage(`Insert error: ${insertError.message}`);
-          return;
-        }
-  
-        console.log('Insert response:', insertData);
-  
+          }])
+      
         dispatch(setUserData({
           userId: userData.user.id,
           Name: userData.user.user_metadata.full_name,
           username: usernamee
         }));
-  
+      
         router.push('/');
       } catch (error) {
         console.error('Unexpected error occurred:', error);
         setMessage('An unexpected error occurred. Please try again.'+ error);
+        
       }
     };
 

@@ -23,37 +23,65 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { RootState } from '@/app/GlobalRedux/store'
 import TweetBox from '@/components/self/TweetBox'
+import username from '../username/page'
+
+type Tweet = {
+  tweet: string;
+  created_by: string;
+};
 
 
 const   Homee = ({currentUser}:{currentUser: string}) => {
 
   const router = useRouter()
-  const dispatch = useDispatch();
+  const currUser = useSelector((state: RootState) => state.counter.username)
+  const dispatch = useDispatch()
 
   const logOut = async () => {
     await supabase.auth.signOut()
     router.refresh();
   }
 
-  const[tweets, setTweets] = useState<any[]>([]);
+  const [tweets, setTweets] = useState<Tweet[]>([]);
   const[tweet, setTweet] = useState<string>("");
 
 
   useEffect(() => {
       const getTweets = async () => {
-        const {data, error} = await supabase
-          .from('tweets')
-          .select('tweet');
+        const { data, error } = await supabase.from('tweets').select('tweet, created_by');
+          if (error) {
+            console.error('Error fetching tweets:', error);
+          } else {
+            setTweets(data);
+          }
+      }
 
+      const setUserDataa = async () => {
+
+        const {data: user} = await supabase.auth.getUser()
+
+        const { data, error } = await supabase.from('users').select('*').eq('id', user?.user?.id);
         if (error) {
-          console.error('Error fetching tweets:', error.message);
-        } else {
-          setTweets(data.map(tweet => tweet.tweet))
+          console.error('Error fetching user:', error.message);
+          return;
+        }
+        
+        if(data && data.length > 0) {
+          const user = data[0];
+          dispatch(setUserData({
+            userId: user.id,
+            Name: user.name,
+            username: user.username
+          }))
         }
       }
 
+      setUserDataa()
       getTweets()
   }, [])
+
+
+  console.log(currUser)
 
   
 
@@ -75,7 +103,7 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
             </TabsList>
 
               <TabsContent value="account" className='flex-col'>
-                <Postmaker  tweet={tweet} setTweet={setTweet}/>
+                <Postmaker  tweet={tweet} setTweet={setTweet} currUser={currUser}/>
                   {tweets.map((tweet) => (
                       <TweetBox tweet={tweet}/>
                   ))}

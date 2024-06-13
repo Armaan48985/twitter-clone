@@ -8,22 +8,25 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import { LuUser2 } from 'react-icons/lu'
 import { useSelector } from 'react-redux'
 
-const TweetBox = ({tweet}:{tweet: string}) => {
 
- const { username } = useSelector((state: RootState) => state.counter);
+type Tweet = {
+    tweet: string;
+    created_by: string;
+  };
 
+const TweetBox = ({tweet}:{tweet: Tweet}) => {
 
   return (
     <div className='border-b-2 border-[var(--primary-border)] flex p-2 w-full py-3'>
         <div className='p-2'>
-            <span className='bg-gray-500 p-3 rounded-full inline-block cursor-pointer'><LuUser2 /></span>
+            <span className='bg-gray-500 p-3 rounded-full inline-block cursor-pointer text-xl'><LuUser2 /></span>
         </div>
 
-        <div className='ml-3 w-full'>
+        <div className='ml-3 w-full pr-2'>
 
             <div className='flex-between py-1'>
                <div className='flex-center gap-3'>
-                    <h3 className='text-md font-bold cursor-pointer hover:underline'>{username}</h3>
+                    <h3 className='text-md font-bold cursor-pointer hover:underline'>{tweet.created_by}</h3>
                     <p className='text-[12px] text-gray-300'>hrs</p>
                </div>
 
@@ -33,7 +36,7 @@ const TweetBox = ({tweet}:{tweet: string}) => {
             </div>
 
             <div className=''>
-                <p>{tweet}</p>
+                <p>{tweet.tweet}</p>
             </div>
 
             <div className='flex-between mt-5 mb-1'>

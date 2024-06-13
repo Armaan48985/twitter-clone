@@ -1,9 +1,9 @@
 'use client'
 import { supabase } from "@/lib/supabase"
+import { useSelector } from "react-redux"
 
 
-export const postTweet = async (tweet:string) => {
-
+export const postTweet = async ({tweet, currUser}:{tweet:string , currUser: string}) => {
     if(tweet.length > 0) {
       console.log('working')
     try {
@@ -11,6 +11,7 @@ export const postTweet = async (tweet:string) => {
         .from('tweets')
         .insert({
           tweet: tweet,
+          created_by: currUser,
         });
       if (error) {
         console.error('Error inserting user data:', error.message, error.details, error.hint, error.code);

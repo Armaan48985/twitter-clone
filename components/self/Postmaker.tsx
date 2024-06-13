@@ -13,10 +13,7 @@ import { createClient } from "@supabase/supabase-js";
 import { postTweet } from '@/app/supabaseFunc'
 import { supabase } from '@/lib/supabase'
 
-const Postmaker = ({tweet, setTweet}:any) => {
-
-
-
+const Postmaker = ({tweet, setTweet, currUser}:any) => {
   return (
     <div className='w-full h-auto border-b-[1px] border-[var(--primary-border)] p-4 flex'>
     <div className='w-[50px] h-full'>
@@ -38,7 +35,7 @@ const Postmaker = ({tweet, setTweet}:any) => {
                   <li className='cursor-pointer'><IoLocationOutline /></li>
                 </ul>                
 
-            <PostButton name="Post" tweet={tweet} setTweet={setTweet}/>
+            <PostButton name="Post" tweet={tweet} setTweet={setTweet} currUser={currUser}/>
         </div>
 
         </div> 

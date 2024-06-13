@@ -5,16 +5,17 @@ import { supabase } from "@/lib/supabase";
 import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const PostButton = ({classname, name, tweet, setTweet}:any) => {
+const PostButton = ({classname, name, tweet, setTweet, currUser}:any) => {
   
   const router = useRouter()
 
   const post = async () => {
-      await postTweet(tweet)
-      router.refresh()
-      console.log('working af')
-      setTweet('')
-  }
+    await postTweet({ tweet, currUser });
+    router.refresh();
+    console.log('working af');
+    setTweet('');
+  };
+  
 
   return (
     <Button 

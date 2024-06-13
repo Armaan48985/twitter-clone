@@ -19,20 +19,6 @@ export default function Login() {
   const router = useRouter();
   const[user, setUser] = useState<any>(null);
 
-  useEffect(() => {
-    const doo = async () => {
-      const {data} = await supabase.auth.getUser();
-      const{data:session} = await supabase.auth.getSession();
-
-      if(data.user?.id){
-         insertUserdata(data.user?.user_metadata.full_name, data.user?.id)
-      }
-    }
-
-    doo()
-  }, [])
-
-  console.log(user)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
