@@ -13,7 +13,6 @@ const Profile = () => {
     Name: state.counter.Name,
     username: state.counter.username
   }));
-  const router = useRouter();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,7 +27,7 @@ const Profile = () => {
       console.log(data)
 
       if (data && data.length > 0) {
-        const user = data[0]; // Assuming there will be only one user with the given userId
+        const user = data[0];
         dispatch(setUserData({
           userId: user.id,
           Name: user.name,
