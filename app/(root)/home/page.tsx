@@ -79,7 +79,7 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
 
       setUserDataa()
       getTweets()
-  }, [])
+  })
 
 
   console.log(currUser)

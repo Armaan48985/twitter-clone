@@ -4,7 +4,7 @@ import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -15,6 +15,9 @@ const username = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const [userExist, setUserExist] = useState(false);
+    const pathname = usePathname()
+
+    router.refresh()
 
     useEffect(() => {
       
@@ -23,16 +26,16 @@ const username = () => {
         const {data: checkId} = await supabase.from('users').select('id').eq('id', userData?.user?.id);
 
         if(checkId && checkId?.length > 0){
-          setMessage('user already exist')
+          setMessage('user already exist... Wait a moment...')
           router.push('/')
           setUserExist(true)
         }
 
         console.log(checkId)
-      }
+      } 
 
       checkUser()
-    }, [])
+    })
 
     const submitUsername = async () => {
       if (usernamee === '') {

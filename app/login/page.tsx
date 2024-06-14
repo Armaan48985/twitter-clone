@@ -52,10 +52,6 @@ export default function Login() {
   const loginWithGoogle = async () => {
     setMessage(null);
 
-    const a = 'username'
-
- 
-
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -64,14 +60,17 @@ export default function Login() {
         },
       });
 
+      if(data){
+        router.push('/username')
+        router.refresh()
+      }
+
       
   
       if (error) {
         setMessage(`Google login error: ${error.message}`);
         return
       }
-
-
 
     } catch (error) {
       console.error('OAuth login error:', error);
