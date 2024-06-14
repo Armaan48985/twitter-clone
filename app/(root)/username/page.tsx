@@ -22,7 +22,7 @@ const username = () => {
         const { data: userData, error: userError } = await supabase.auth.getUser();
         const {data: checkId} = await supabase.from('users').select('id').eq('id', userData?.user?.id);
 
-        if(checkId?.length > 0){
+        if(checkId && checkId?.length > 0){
           setMessage('user already exist')
           router.push('/')
           setUserExist(true)
