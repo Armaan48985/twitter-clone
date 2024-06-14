@@ -38,7 +38,7 @@ const TweetBox = ({tweet}:{tweet: Tweet}) => {
             <div className='flex-between py-1'>
                <div className='flex-center gap-3'>
                     <h3 className='text-md font-bold cursor-pointer hover:underline'>{tweet.created_by}</h3>
-                    <p className='text-[12px] text-gray-300'>{hrs}d</p>
+                    <p className='text-[12px] text-gray-300'>• {hrs}d</p>
                </div>
 
                <span className='text-md cursor-pointer'>

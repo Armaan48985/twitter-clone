@@ -37,14 +37,15 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
   const router = useRouter()
   const currUser = useSelector((state: RootState) => state.counter.username)
   const dispatch = useDispatch()
+  const [tweets, setTweets] = useState<Tweet[]>([]);
+  const[tweet, setTweet] = useState<string>("");
 
+
+  
   const logOut = async () => {
     await supabase.auth.signOut()
     router.refresh();
   }
-
-  const [tweets, setTweets] = useState<Tweet[]>([]);
-  const[tweet, setTweet] = useState<string>("");
 
 
   useEffect(() => {
@@ -105,8 +106,8 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
 
               <TabsContent value="account" className='flex-col'>
                 <Postmaker  tweet={tweet} setTweet={setTweet} currUser={currUser}/>
-                  {tweets.map((tweet) => (
-                      <TweetBox tweet={tweet}/>
+                  {tweets.map((tweet, i) => (
+                      <TweetBox tweet={tweet} key={i}/>
                   ))}
                   
               </TabsContent>

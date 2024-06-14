@@ -1,5 +1,4 @@
 'use client'
-import { insertUserdata } from '@/app/GlobalFunctions'
 import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,16 +7,13 @@ import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-const username = () => {
+const Username = () => {
 
     const[usernamee, setUsername] = useState('')
     const[message, setMessage] = useState('')
     const router = useRouter()
     const dispatch = useDispatch()
     const [userExist, setUserExist] = useState(false);
-    const pathname = usePathname()
-
-    router.refresh()
 
     useEffect(() => {
       
@@ -30,8 +26,6 @@ const username = () => {
           router.push('/')
           setUserExist(true)
         }
-
-        console.log(checkId)
       } 
 
       checkUser()
@@ -60,11 +54,7 @@ const username = () => {
       try {
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError) throw userError;
-
-        console.log('User data:', userData);
-
       
-
           const { error: insertError, data: insertData } = await supabase
           .from('users')
           .insert([{
@@ -110,4 +100,4 @@ const username = () => {
   )
 }
 
-export default username
+export default Username
