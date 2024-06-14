@@ -67,8 +67,8 @@ export default function Home() {
   return (
     <div className="bg-black flex gap-2">
       <Sidebar/>
-      <Homee currentUser={currentUser}/>
-      <RightSidebar options={[]}/>
+      <Homee/>
+      <RightSidebar/>
     </div>
   );
 }

@@ -6,24 +6,17 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { Input } from '@/components/ui/input'
-import { FaXTwitter } from 'react-icons/fa6'
-import { IoLocationOutline, IoSettingsOutline } from 'react-icons/io5'
-import { RiEarthFill, RiGalleryLine } from 'react-icons/ri'
-import { MdOutlineGifBox } from 'react-icons/md'
-import { TfiList } from 'react-icons/tfi'
-import { PiSmileyLight } from 'react-icons/pi'
-import { LuCalendarClock } from 'react-icons/lu'
-import { createClient } from "@supabase/supabase-js";
+import { IoSettingsOutline } from 'react-icons/io5'
 import { Button } from '@/components/ui/button'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Postmaker from '@/components/self/Postmaker'
 import { supabase } from '@/lib/supabase'
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { RootState } from '@/app/GlobalRedux/store'
 import TweetBox from '@/components/self/TweetBox'
-import username from '../username/page'
+import { Input } from '@/components/ui/input'
+
 
 type Tweet = {
   tweet: string;
@@ -32,7 +25,7 @@ type Tweet = {
 };
 
 
-const   Homee = ({currentUser}:{currentUser: string}) => {
+const   Homee = () => {
 
   const router = useRouter()
   const currUser = useSelector((state: RootState) => state.counter.username)
@@ -41,7 +34,7 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
   const[tweet, setTweet] = useState<string>("");
 
 
-  
+
   const logOut = async () => {
     await supabase.auth.signOut()
     router.refresh();
@@ -80,7 +73,7 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
 
       setUserDataa()
       getTweets()
-  })
+  }, [])
 
 
   console.log(currUser)

@@ -13,7 +13,7 @@ export const data = [
         name: "Home",
         icon: <GrHomeRounded />,
         activeIcon: <MdHomeFilled/>,
-        link: '/home'
+        link: '/'
     },
     {
         name: "Explore",
