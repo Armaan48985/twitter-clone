@@ -1,5 +1,5 @@
 import { RootState } from '@/app/GlobalRedux/store'
-import React from 'react'
+import React, { useState } from 'react'
 import { AiOutlineRetweet } from 'react-icons/ai'
 import { BiBarChart, BiMessageRounded } from 'react-icons/bi'
 import { CiBookmark, CiHeart } from 'react-icons/ci'
@@ -12,9 +12,20 @@ import { useSelector } from 'react-redux'
 type Tweet = {
     tweet: string;
     created_by: string;
+    created_at: Date;
   };
 
 const TweetBox = ({tweet}:{tweet: Tweet}) => {
+
+    const createdAt = new Date(tweet.created_at);
+    const currDate = new Date();
+
+    const [hrs, setHrs] = useState(currDate.getDate() - createdAt.getDate());
+
+    if(hrs < 1){
+        setHrs(currDate.getHours() - createdAt.getHours());
+    }
+
 
   return (
     <div className='border-b-2 border-[var(--primary-border)] flex p-2 w-full py-3'>
@@ -27,7 +38,7 @@ const TweetBox = ({tweet}:{tweet: Tweet}) => {
             <div className='flex-between py-1'>
                <div className='flex-center gap-3'>
                     <h3 className='text-md font-bold cursor-pointer hover:underline'>{tweet.created_by}</h3>
-                    <p className='text-[12px] text-gray-300'>hrs</p>
+                    <p className='text-[12px] text-gray-300'>{hrs}d</p>
                </div>
 
                <span className='text-md cursor-pointer'>

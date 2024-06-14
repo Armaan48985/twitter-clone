@@ -28,6 +28,7 @@ import username from '../username/page'
 type Tweet = {
   tweet: string;
   created_by: string;
+  created_at: Date;
 };
 
 
@@ -48,7 +49,7 @@ const   Homee = ({currentUser}:{currentUser: string}) => {
 
   useEffect(() => {
       const getTweets = async () => {
-        const { data, error } = await supabase.from('tweets').select('tweet, created_by');
+        const { data, error } = await supabase.from('tweets').select('tweet, created_by, created_at');
           if (error) {
             console.error('Error fetching tweets:', error);
           } else {
