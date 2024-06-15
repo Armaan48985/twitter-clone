@@ -30,10 +30,6 @@ const TweetBox = ({tweet}:{tweet: Tweet}) => {
     const [liked, setLiked] = useState(false);
     const [noOfLikes, setNoOfLikes] = useState(tweet.likes);
 
-    if(hrs < 1){
-        setHrs(currDate.getHours() - createdAt.getHours());
-    }
-
     useEffect(() => {
         const setNoOfLikes = async () => {
             try {
@@ -57,7 +53,7 @@ const TweetBox = ({tweet}:{tweet: Tweet}) => {
             setNoOfLikes();
         }
 
-    }, [noOfLikes, liked, tweet]);
+    }, [liked]);
     
 
 

@@ -19,6 +19,9 @@ const Profile = () => {
   const[username, setUsername] = useState('');
   const[openEditBox, setOpenEditBox] = useState(false);
   const [loading, setLoading] = useState(true)
+  const [Bio, setBio] = useState('Bio');
+  const [Location, setLocation] = useState('Location');
+  const [Website, setWebsite] = useState('Website');
 
   useEffect(() => {
     const getUser = async () => {
@@ -40,6 +43,7 @@ const Profile = () => {
           username: user.username
         }));
         setLoading(false);
+        setBio(user?.bio);
       }
     };
 
@@ -83,7 +87,7 @@ const Profile = () => {
               </div>
 
               <div className='py-4'>
-                {/* bio */}
+                <p>{Bio}</p>
               </div>
 
               <div className='py-2'>

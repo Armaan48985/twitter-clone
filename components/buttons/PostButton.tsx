@@ -11,7 +11,7 @@ const PostButton = ({classname, name, tweet, setTweet, currUser}:any) => {
 
   const post = async () => {
     await postTweet({ tweet, currUser });
-    router.refresh();
+    router.push('/')
     console.log('working af');
     setTweet('');
   };

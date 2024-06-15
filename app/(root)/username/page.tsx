@@ -29,7 +29,7 @@ const Username = () => {
       } 
 
       checkUser()
-    })
+    }, [])
 
     const submitUsername = async () => {
       if (usernamee === '') {
