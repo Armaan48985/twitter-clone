@@ -19,9 +19,12 @@ import { Input } from '@/components/ui/input'
 
 
 type Tweet = {
+  id: string;
   tweet: string;
   created_by: string;
   created_at: Date;
+  likes: number;
+  comments: number;
 };
 
 
@@ -32,6 +35,7 @@ const   Homee = () => {
   const dispatch = useDispatch()
   const [tweets, setTweets] = useState<Tweet[]>([]);
   const[tweet, setTweet] = useState<string>("");
+  const [loading, setLoading] = useState(true)
 
 
 
@@ -43,18 +47,17 @@ const   Homee = () => {
 
   useEffect(() => {
       const getTweets = async () => {
-        const { data, error } = await supabase.from('tweets').select('tweet, created_by, created_at');
+        const { data, error } = await supabase.from('tweets').select('id, tweet, created_by, created_at, likes, comments');
           if (error) {
             console.error('Error fetching tweets:', error);
           } else {
             setTweets(data);
+            setLoading(false);
           }
       }
 
       const setUserDataa = async () => {
-
         const {data: user} = await supabase.auth.getUser()
-
         const { data, error } = await supabase.from('users').select('*').eq('id', user?.user?.id);
         if (error) {
           console.error('Error fetching user:', error.message);
@@ -75,11 +78,6 @@ const   Homee = () => {
       getTweets()
   }, [])
 
-
-  console.log(currUser)
-
-  
-
   return (
       <main className='flex'>
         <section className='main-section'>
@@ -99,10 +97,15 @@ const   Homee = () => {
 
               <TabsContent value="account" className='flex-col'>
                 <Postmaker  tweet={tweet} setTweet={setTweet} currUser={currUser}/>
-                  {tweets.map((tweet, i) => (
-                      <TweetBox tweet={tweet} key={i}/>
-                  ))}
-                  
+                {loading ? (
+                    <div className='flex justify-center items-center h-screen'>
+                      <div className='animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900'></div>
+                    </div>
+                  ) : (
+                    tweets.map((tweet, i) => (
+                      <TweetBox tweet={tweet} key={i} />
+                    ))
+                  )}
               </TabsContent>
               <TabsContent value="password">
                 <div className='w-full h-20 border-b-[1px] border-[#3A4249]'>
