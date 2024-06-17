@@ -6,27 +6,34 @@ import RightSidebar from '@/components/self/RightSidebar';
 import Sidebar from '@/components/self/Sidebar';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase'
+import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import { CiLocationOn } from 'react-icons/ci';
 import { FaArrowLeftLong, FaRegUser } from 'react-icons/fa6';
+import { IoLink } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Profile = () => {
-  const dispatch = useDispatch();
 
   const[Name, setName] = useState('');
   const[username, setUsername] = useState('');
   const[openEditBox, setOpenEditBox] = useState(false);
   const [loading, setLoading] = useState(true)
   const [Bio, setBio] = useState('Bio');
-  const [Location, setLocation] = useState('Location');
-  const [Website, setWebsite] = useState('Website');
+  const [Location, setLocation] = useState('');
+  const [Website, setWebsite] = useState('');
+  const  [avatar, setAvatar] = useState<string>('')
+  const [editable, setEditable] = useState(false);
+  const pathname = useParams();
+  
+
 
   useEffect(() => {
     const getUser = async () => {
       const {data:id} = await supabase.auth.getUser();
-      const { data, error } = await supabase.from('users').select('*').eq('id', id.user?.id);
+      const { data, error } = await supabase.from('users').select('*').eq('username', pathname.username);
 
       if (error) {
         console.error('Error fetching user:', error.message);
@@ -34,22 +41,24 @@ const Profile = () => {
       }    
 
       if (data && data.length > 0) {
-        const user = data[0];
+        const user = data[0];     
         setName(user?.name);
         setUsername(user?.username);
-        dispatch(setUserData({
-          userId: user.id,
-          Name: user.name,
-          username: user.username
-        }));
         setLoading(false);
         setBio(user?.bio);
+        setAvatar(user?.avatar);
+        setLocation(user?.location);
+        setWebsite(user?.website);
+        if(id.user?.id == data[0]?.id)  setEditable(true);
       }
     };
 
       getUser();
 
-  }, []);
+  }, [pathname, openEditBox]);
+
+  console.log(Location)
+  
 
   return (
     <div className='flex relative'>
@@ -74,30 +83,40 @@ const Profile = () => {
             {/* image */}
           </div>
 
-          <div className='border-b-2 border-[var(--primary-border)] pb-4 pl-2'>
-            <div className='p-3'>
-              <div className='flex justify-end py-6 relative'>
-                <Button variant='outline' className='border-[var(--primary-border)] rounded-3xl' onClick={() => setOpenEditBox(true)}>Edit Profile</Button>
-                <div className='absolute top-[-4rem] left-5 p-14 border-black border-4 shadow-xl text-xl bg-yellow-800 rounded-full'><FaRegUser /></div>
-              </div>
+          <div className='border-b-2 border-[var(--primary-border)] pb-4 pl-5'>
+              <div className='p-3'>
+                  <div className={`flex justify-end py-6 relative ${!editable && 'mb-10'}`}> 
+                      {editable ? <Button variant='outline' className='border-[var(--primary-border)] rounded-3xl' onClick={() => setOpenEditBox(true)}>Edit Profile</Button> : <Button variant='default' className='rounded-3xl'>Follow</Button>}
+                      <div className='absolute top-[-4rem] left-3 border-black border-4 shadow-xl text-xl bg-yellow-800 rounded-full'>
+                        {avatar ? <Image src={avatar} alt='avatar' width={350} height={350} className='w-28 h-28 rounded-full'/> : <FaRegUser className='w-28 h-28 rounded-full' /> }
+                      </div>
+                  </div>
 
-              <div className='py-2 mt-2'>
-                <h1 className='text-2xl font-bold'>{Name}</h1>
-                <h3 className='text-gray-300 mt-1'>@{username}</h3>
-              </div>
+                  <div>
+                      <div className='py-2 mt-2'>
+                          <h1 className='text-2xl font-bold'>{Name}</h1>
+                          <h3 className='text-gray-300'>@{username}</h3>
+                        </div>
 
-              <div className='py-4'>
-                <p>{Bio}</p>
-              </div>
+                        <div className='py-4'>
+                          <p>{Bio}</p>
+                        </div>
 
-              <div className='py-2'>
-                {/* other details */}
-              </div>
+                        <div className='py-2 flex gap-4'>
+                          {Location && <div className='flex-center gap-1 text-gray-300'><span><CiLocationOn /></span><p>{Location}</p></div>}
+                          {Website && 
+                          <div className='flex-center gap-1 text-gray-300'>
+                              <span><IoLink /></span>
+                              <a href={`http://${Website}`} className='text-blue-500'>{Website}</a>
+                          </div>
+                          }
+                        </div>
 
-              <div className='flex gap-3'>
-                <p>0 Followers</p>
-                <p>0 Following</p>
-              </div>
+                        <div className='flex gap-6 mt-3'>
+                          <p>0 Followers</p>
+                          <p>0 Following</p>
+                        </div>
+                  </div>
             </div>
           </div>
         </>

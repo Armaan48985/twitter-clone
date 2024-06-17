@@ -5,20 +5,22 @@ import { Input } from '../ui/input';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/GlobalRedux/store';
 import { supabase } from '@/lib/supabase';
+import Image from 'next/image';
+import { RxCross2 } from 'react-icons/rx';
 
 const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
-
-  const Name = useSelector((state: RootState) => state.counter.Name);
-  const userId = useSelector((state: RootState) => state.counter.userId);
-  const [Bio, setBio] = useState('Bio');
-  const [Location, setLocation] = useState('Location');
-  const [Website, setWebsite] = useState('Website');
-  const [BirthDate, setBirthDate] = useState('Birthdate');
+  const [Name, setName] = useState('');
+  const [Bio, setBio] = useState('');
+  const [Location, setLocation] = useState('');
+  const [Website, setWebsite] = useState('');
+  const [BirthDate, setBirthDate] = useState('');
+  const [avatar, setAvatar] = useState<string>('');
 
   useEffect(() => {
+
     const getUserData = async () => {
-      const { data, error } = await supabase.from('users').select('*').eq('id', userId);
-    
+      const {data:userr} = await supabase.auth.getUser();
+      const { data, error } = await supabase.from('users').select('*').eq('id', userr?.user?.id);
       if (error) {
         console.error('Error fetching user:', error.message);
         return;
@@ -30,22 +32,23 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
           setLocation(user?.location);
           setWebsite(user?.website);
           setBirthDate(user?.birth_date);
+          setAvatar(user?.avatar);
+          setName(user?.name);
+          console.log('getting the fcking data')
       }
     }
+
 
     getUserData();
   }, [])
 
-  console.log(Bio)
-
-
   const updateUser = async () => {
+    const {data:userr} = await supabase.auth.getUser();
     const { data, error } = await supabase.from('users').update({
       bio: Bio,
       location: Location,
       website: Website,
-      birth_date: BirthDate
-    }).eq('id', userId);
+    }).eq('id', userr.user?.id);
 
     if (error) {
       console.error('Error updating user:', error.message);
@@ -54,11 +57,9 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
   
       setOpenEditBox(false);
       console.log('User updated successfully')
- 
-
   }
 
-
+  console.log(Location)
 
     return (
       <div className="fixed inset-0 flex justify-center items-center z-50">
@@ -66,13 +67,14 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
         <div className="bg-black rounded-xl shadow-lg relative z-10 w-[600px]">
           <div className='flex-between p-2'>
             <div className='flex-center gap-5 p-3'>
-              <button
-                className="text-xl"
-                onClick={() => setOpenEditBox(false)}
-              >
-                &times;
-              </button>
-
+              
+                <span
+                  className="text-xl cursor-pointer rounded-full hover:bg-[var(--primary-border)] p-1"
+                  onClick={() => setOpenEditBox(false)}
+                >
+                  <RxCross2 />
+                </span>
+             
               <h1 className='text-xl'>Edit Profile</h1>
             </div>
 
@@ -83,10 +85,16 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
             {/* image */}
           </div>
 
-        <div className='border-b-2 border-[var(--primary-border)] pb-4 pl-2'>
+        <div className='border-[var(--primary-border)] pb-4 pl-2'>
             <div className='p-3'>
                   <div className='flex justify-end py-6 relative'>
-                    <div className='absolute top-[-4rem] left-5 p-10 border-black border-4 shadow-xl text-xl bg-yellow-800 rounded-full'><FaRegUser /></div>
+                    <Image
+                       src={avatar}
+                       alt='avatar'
+                       width={100}
+                       height={100}
+                       className='absolute top-[-4rem] left-5 border-black border-4 shadow-xl rounded-full'
+                    />
                   </div>
 
                   <div className='py-2 mt-2'>
@@ -94,17 +102,20 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
                       <p className='text-[13px] text-gray-400'>Name</p>
                       <Input 
                         type='text'
-                        className='border-none w-full h-[15px] my-2 text-[1rem] pl-0'
-                        placeholder={Name} />
+                        className='border-none w-full h-[18px] my-2 text-[1rem] pl-0'
+                        placeholder={Name}
+                        value={Name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </div>
                   </div>
 
                   <div className='py-2 mt-2'>
                     <div className='border-slate-600 border-[1px] rounded-md px-4 py-[.4rem]'>
                       <p className='text-[13px] text-gray-400'>Bio</p>
-                      <Input 
-                        type='text'
-                        className='border-none w-full h-[15px] my-2 text-[1rem] pl-0'
+                      <textarea 
+                        rows={3}
+                        className='bg-black text-white border-none w-full my-2 text-[1rem] pl-0 outline-none'
                         placeholder={Bio} 
                         value={Bio} 
                         onChange={(e) => setBio(e.target.value)} />
@@ -116,7 +127,7 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
                       <p className='text-[13px] text-gray-400'>Location</p>
                       <Input 
                         type='text'
-                        className='border-none w-full h-[15px] my-2 text-[1rem] pl-0'
+                        className='border-none w-full h-[18px] my-2 text-[1rem] pl-0'
                         placeholder={Location} 
                         value={Location} 
                         onChange={(e) => setLocation(e.target.value)} />
@@ -128,7 +139,7 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
                       <p className='text-[13px] text-gray-400'>Website</p>
                       <Input 
                         type='text'
-                        className='border-none w-full h-[15px] my-2 text-[1rem] pl-0'
+                        className='border-none w-full h-[18px] my-2 text-[1rem] pl-0'
                         placeholder={Website} 
                         value={Website} 
                         onChange={(e) => setWebsite(e.target.value)} />
@@ -140,7 +151,7 @@ const EditProfile = ({ openEditBox, setOpenEditBox}:any) => {
                       <p className='text-[13px] text-gray-400'>Birth Date</p>
                       <Input 
                         type='date'
-                        className='border-none w-full h-[15px] my-2 text-[1rem] pl-0'
+                        className='border-none w-full h-[20px] my-2 text-[1rem] pl-0'
                         placeholder={BirthDate} 
                         value={BirthDate} 
                         onChange={(e) => setBirthDate(e.target.value)} />

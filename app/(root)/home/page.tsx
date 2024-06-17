@@ -16,6 +16,8 @@ import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { RootState } from '@/app/GlobalRedux/store'
 import TweetBox from '@/components/self/TweetBox'
 import { Input } from '@/components/ui/input'
+import Image from 'next/image'
+import { User } from 'lucide-react'
 
 
 type Tweet = {
@@ -31,13 +33,17 @@ type Tweet = {
 const   Homee = () => {
 
   const router = useRouter()
-  const currUser = useSelector((state: RootState) => state.counter.username)
   const dispatch = useDispatch()
   const [tweets, setTweets] = useState<Tweet[]>([]);
   const[tweet, setTweet] = useState<string>("");
   const [loading, setLoading] = useState(true)
 
-
+  const currUser = useSelector((state:RootState) => ({
+    avatar: state.counter.avatar,
+    Name: state.counter.Name,
+    username: state.counter.username,
+    userId: state.counter.userId
+  }));
 
   const logOut = async () => {
     await supabase.auth.signOut()
@@ -47,17 +53,18 @@ const   Homee = () => {
 
   useEffect(() => {
       const getTweets = async () => {
-        const { data, error } = await supabase.from('tweets').select('id, tweet, created_by, created_at, likes, comments');
+        const { data, error } = await supabase.from('tweets').select('*');
           if (error) {
             console.error('Error fetching tweets:', error);
           } else {
+
             setTweets(data);
             setLoading(false);
           }
       }
 
       const setUserDataa = async () => {
-        const {data: user} = await supabase.auth.getUser()
+        const {data: user} = await supabase.auth.getUser();
         const { data, error } = await supabase.from('users').select('*').eq('id', user?.user?.id);
         if (error) {
           console.error('Error fetching user:', error.message);
@@ -69,14 +76,16 @@ const   Homee = () => {
           dispatch(setUserData({
             userId: user.id,
             Name: user.name,
-            username: user.username
+            username: user.username,
+            avatar: user.avatar
           }))
         }
       }
 
-      setUserDataa()
+      setUserDataa() 
       getTweets()
   }, [])
+
 
   return (
       <main className='flex'>
@@ -96,7 +105,7 @@ const   Homee = () => {
             </TabsList>
 
               <TabsContent value="account" className='flex-col'>
-                <Postmaker  tweet={tweet} setTweet={setTweet} currUser={currUser}/>
+                <Postmaker  tweet={tweet} setTweet={setTweet} currUser={currUser.userId}/>
                 {loading ? (
                     <div className='flex justify-center items-center h-screen'>
                       <div className='animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900'></div>

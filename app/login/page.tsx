@@ -1,7 +1,7 @@
 'use client';
 import { supabase } from "@/lib/supabase";
 import { error } from "console";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
@@ -48,6 +48,13 @@ export default function Login() {
     }
   };
 
+  const path = usePathname();
+
+  useEffect(() => {
+    if (path && path.includes('/username')) {
+      router.refresh()
+    }
+}, []);
 
   const loginWithGoogle = async () => {
     setMessage(null);
@@ -60,16 +67,14 @@ export default function Login() {
         },
       });
 
-      if(data){
-        router.push('/username')
-        router.refresh()
-      }
-
-      
-  
       if (error) {
         setMessage(`Google login error: ${error.message}`);
         return
+      }
+
+
+      if(data){
+        router.push('/username')
       }
 
     } catch (error) {
