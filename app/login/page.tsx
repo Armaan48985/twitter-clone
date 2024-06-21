@@ -4,9 +4,6 @@ import { error } from "console";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
-import { setUserData } from "../GlobalRedux/Feature/counter/counterSlice";
-import { insertUserdata } from "../GlobalFunctions";
 
 
 export default function Login() {
@@ -71,12 +68,6 @@ export default function Login() {
         setMessage(`Google login error: ${error.message}`);
         return
       }
-
-
-      if(data){
-        router.push('/username')
-      }
-
     } catch (error) {
       console.error('OAuth login error:', error);
       setMessage('An unexpected error occurred during Google login.');

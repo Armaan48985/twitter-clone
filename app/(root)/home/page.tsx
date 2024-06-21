@@ -16,8 +16,7 @@ import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { RootState } from '@/app/GlobalRedux/store'
 import TweetBox from '@/components/self/TweetBox'
 import { Input } from '@/components/ui/input'
-import Image from 'next/image'
-import { User } from 'lucide-react'
+import { setUserDataa } from '@/app/supabaseFunc'
 
 
 type Tweet = {
@@ -29,14 +28,24 @@ type Tweet = {
   comments: number;
 };
 
+export type User = {
+  id: string;
+  username: string;
+  avatar: string;
+  name: string;
+  bio: string;
+}
 
-const   Homee = () => {
+
+const Homee = () => {
 
   const router = useRouter()
   const dispatch = useDispatch()
   const [tweets, setTweets] = useState<Tweet[]>([]);
   const[tweet, setTweet] = useState<string>("");
   const [loading, setLoading] = useState(true)
+  const [currUserData, setCurrUserData] = useState<User | null>(null);
+
 
   const currUser = useSelector((state:RootState) => ({
     avatar: state.counter.avatar,
@@ -51,40 +60,38 @@ const   Homee = () => {
   }
 
 
-  useEffect(() => {
-      const getTweets = async () => {
-        const { data, error } = await supabase.from('tweets').select('*');
-          if (error) {
-            console.error('Error fetching tweets:', error);
-          } else {
-
-            setTweets(data);
-            setLoading(false);
-          }
-      }
-
-      const setUserDataa = async () => {
-        const {data: user} = await supabase.auth.getUser();
-        const { data, error } = await supabase.from('users').select('*').eq('id', user?.user?.id);
-        if (error) {
-          console.error('Error fetching user:', error.message);
-          return;
+    useEffect(() => {
+        const getTweets = async () => {
+          const { data, error } = await supabase.from('tweets').select('*');
+            if (error) {
+              console.error('Error fetching tweets:', error);
+            } else {
+              setTweets(data);
+              setLoading(false);
+            }
         }
-        
-        if(data && data.length > 0) {
-          const user = data[0];
-          dispatch(setUserData({
-            userId: user.id,
-            Name: user.name,
-            username: user.username,
-            avatar: user.avatar
-          }))
-        }
-      }
 
-      setUserDataa() 
-      getTweets()
-  }, [])
+        const fetchData = async () => {
+          await setUserDataa(setCurrUserData);
+        };
+
+       
+
+        fetchData();
+        getTweets()
+    }, [])
+
+    if(currUserData){
+      dispatch(setUserData({
+        avatar: currUserData?.avatar,
+        Name: currUserData?.name,
+        username: currUserData?.username,
+        userId: currUserData?.id
+      }))
+    }
+
+    console.log(currUserData)
+    console.log(currUser)
 
 
   return (
@@ -104,27 +111,30 @@ const   Homee = () => {
               </div>
             </TabsList>
 
-              <TabsContent value="account" className='flex-col'>
-                <Postmaker  tweet={tweet} setTweet={setTweet} currUser={currUser.userId}/>
-                {loading ? (
-                    <div className='flex justify-center items-center h-screen'>
-                      <div className='animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900'></div>
-                    </div>
-                  ) : (
-                    tweets.map((tweet, i) => (
-                      <TweetBox tweet={tweet} key={i} />
-                    ))
-                  )}
-              </TabsContent>
-              <TabsContent value="password">
-                <div className='w-full h-20 border-b-[1px] border-[#3A4249]'>
-                  <div>
-                    <span>img</span>
-                    <Input placeholder='What is happening?!' value='text' className='bg-transparent'/>
+
+            {loading ? (
+                  <div className='flex justify-center items-center h-screen'>
+                    <div className='animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900'></div>
                   </div>
-                </div>
-                hfgd  
-              </TabsContent>
+                ) : (
+                  <>
+                    <TabsContent value="account" className='flex-col'>
+                      <Postmaker tweet={tweet} setTweet={setTweet} currUser={currUser} />
+                      {tweets.map((tweet, i) => (
+                        <TweetBox tweet={tweet} key={i} content={tweet.tweet} />
+                      ))}
+                    </TabsContent>
+                    <TabsContent value="password">
+                      <div className='w-full h-20 border-b-[1px] border-[#3A4249]'>
+                        <div>
+                          <span>img</span>
+                          <Input placeholder='What is happening?!' value='text' className='bg-transparent' />
+                        </div>
+                      </div>
+                      hfgd
+                    </TabsContent>
+                  </>
+                )}
             </Tabs>
           </div>
         </section>
