@@ -54,12 +54,7 @@ const Homee = () => {
     userId: state.counter.userId
   }));
 
-  const logOut = async () => {
-    await supabase.auth.signOut()
-    router.refresh();
-  }
-
-
+ 
     useEffect(() => {
         const getTweets = async () => {
           const { data, error } = await supabase.from('tweets').select('*');
@@ -90,19 +85,15 @@ const Homee = () => {
       }))
     }
 
-    console.log(currUserData)
-    console.log(currUser)
-
-
   return (
       <main className='flex'>
         <section className='main-section'>
           <div>
             <Tabs defaultValue="account" className="w-auto h-[1000px] relative">
-            <TabsList className="flex w-full m-0 rounded-none luffy bg-black border-b-[1px] border-[var(--primary-gray)] pb-10">
-              <div className="flex-grow basis-9/10 flex items-center my-6">
-                <TabsTrigger value="account" className="w-full text-white text-md mt-7">For You</TabsTrigger>
-                <TabsTrigger value="password" className="w-full text-white text-md mt-7">Following</TabsTrigger>
+            <TabsList className="flex w-full m-0 rounded-none luffy bg-black border-b-[1px] border-[var(--primary-gray)] pb-11">
+              <div className="flex-grow basis-9/10 flex items-center my-7">
+                <TabsTrigger value="account" className="w-full text-white text-md mt-8">For You</TabsTrigger>
+                <TabsTrigger value="password" className="w-full text-white text-md mt-8">Following</TabsTrigger>
               </div>
               <div className="px-4 flex items-center justify-center m-0">
                 <span className="hover:bg-gray-900 p-2 rounded-full mt-8">
@@ -138,10 +129,6 @@ const Homee = () => {
             </Tabs>
           </div>
         </section>
-
-        {/* <RightSidebar options={UserData}/> */}
-
-        <Button variant="default" className='absolute right-0 top-0' onClick={logOut}>LogOut</Button>
       </main>
   )
 }

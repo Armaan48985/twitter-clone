@@ -49,7 +49,7 @@ export default function Login() {
 
   useEffect(() => {
     if (path && path.includes('/username')) {
-      router.refresh()
+      window.location.reload();
     }
 }, []);
 

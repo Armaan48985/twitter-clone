@@ -7,6 +7,7 @@
   --primary-blue: rgb(29 155 240);
   --primary-gray: #3a4249;
   --primary-light-gray: #434c54;
+  --primary-dark-gray: #181818;
 }
 
 .primary-blue {
@@ -81,4 +82,28 @@
   100% {
     transform: translateX(-100%);
   }
+}
+
+
+
+/* -----------scrollbar---------- */
+
+::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+  height: 10px; /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #242424; /* Dark background of the scrollbar track */
+  border-radius: 2px; /* Roundness of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #4b5563, #9ca3af); /* Gradient color of the scrollbar thumb */
+  border-radius: 5px; /* Roundness of the thumb */
+  border: 2px solid #2d2d2d; /* Space around the thumb, matching track color */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #6b7280, #d1d5db); /* Lighter color when hovered */
 }

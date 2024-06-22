@@ -100,7 +100,12 @@ const Username = () => {
                 className='border-gray-500 bg-[#282828] text-whit mt-2'
                 />
 
-                {message != '' && <p className='py-4 text-red-500 text-sm'>{message}</p>}
+                {message !== '' && (
+                  <p className="mt-4 text-[#ff3434] brightness-150 text-md">
+                    {message}
+                  </p>
+                )}
+
           </div>
 
           <Button variant='default' onClick={submitUsername} className='rounded-b-xl py-6 bg-[#282828] border-gray-300 w-full mt-4 hover:bg-[#3b3b3b] duration-500'>Submit</Button>

@@ -63,3 +63,8 @@ export const setUserDataa = async (setCurrUserData: React.Dispatch<React.SetStat
     setCurrUserData(data[0]);
   }
 };
+
+
+export const logOut = async () => {
+  await supabase.auth.signOut()
+}
