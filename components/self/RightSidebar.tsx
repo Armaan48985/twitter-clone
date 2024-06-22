@@ -21,11 +21,11 @@ interface Props {
         <SubscribetoPremiumBox/>
         <Whatshappening/>
         <WhotoFollow/>
-        <WhotoFollow/>
+        {/* <WhotoFollow/>
 
         <WhotoFollow/>
 
-        <WhotoFollow/>
+        <WhotoFollow/> */}
 
       </section>
     );

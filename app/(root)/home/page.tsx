@@ -99,7 +99,7 @@ const Homee = () => {
         <section className='main-section'>
           <div>
             <Tabs defaultValue="account" className="w-auto h-[1000px] relative">
-            <TabsList className="flex w-full m-0 rounded-none luffy bg-black border-b-2 border-gray-700 pb-10">
+            <TabsList className="flex w-full m-0 rounded-none luffy bg-black border-b-[1px] border-[var(--primary-gray)] pb-10">
               <div className="flex-grow basis-9/10 flex items-center my-6">
                 <TabsTrigger value="account" className="w-full text-white text-md mt-7">For You</TabsTrigger>
                 <TabsTrigger value="password" className="w-full text-white text-md mt-7">Following</TabsTrigger>

@@ -10,6 +10,9 @@ import { postTweet } from "@/app/supabaseFunc";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import PostButton from "../buttons/PostButton";
+import { toast } from "sonner"
+import { Toaster } from "../ui/sonner";
+import { Button } from "../ui/button";
 
 const Postmaker = ({ tweet, setTweet, currUser }: any) => {
 
@@ -18,8 +21,15 @@ const Postmaker = ({ tweet, setTweet, currUser }: any) => {
   const PostTweet = async () => {
     try {
       await postTweet({ tweet: tweet, currUser: currUser.userId });
-      setTweet(""); // Clear the input field after posting
-      router.refresh(); // Refresh the router to update the component
+      setTweet("");
+      toast("Your Post is Created", {
+        description: "Sunday, December 03, 2023 at 9:00 AM",
+        action: {
+          label: "Undo",
+          onClick: () => console.log("Undo"),
+        },
+      })
+      window.location.reload();
     } catch (error) {
       console.error("Error posting tweet:", error); // Log any errors for debugging
     }
@@ -73,6 +83,7 @@ const Postmaker = ({ tweet, setTweet, currUser }: any) => {
             onClickFunc={PostTweet}
             classname=''
           />
+          <Toaster className="bg-red-500"/>
         </div>
       </div>
     </div>

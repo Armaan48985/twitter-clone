@@ -15,6 +15,18 @@ import PostComment from "./PostComment";
 import { useRouter } from "next/navigation";
 import CustomLink from "./LinkWrapper";
 import { getTweetUser } from "@/app/supabaseFunc";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 
 
 type Tweet = {
@@ -70,11 +82,8 @@ const TweetBox = ({ tweet, content }: any) => {
       const clickedClickableElement = event.target.closest('.flex-center.gap-1.text-md.text-gray-400.cursor-pointer'); // Adjust selector as needed
     
       if (clickedClickableElement) {
-        // Clicked on a prioritized element - prevent parent link navigation
         event.stopPropagation();
-        // Handle specific logic for the clicked element (e.g., postCommment, like/unlike)
       } else {
-        // Clicked on an empty space or other elements - navigate with the parent Link
         router.push(`/tweet/${tweet.id}`);
       }
     };
@@ -120,7 +129,29 @@ const TweetBox = ({ tweet, content }: any) => {
               </div>
 
               <span className="text-md cursor-pointer">
-                <HiOutlineDotsHorizontal />
+                    <AlertDialog>
+                          <AlertDialogTrigger > 
+                            <span onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                          }}> <HiOutlineDotsHorizontal /></span>
+                         
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete your account
+                          and remove your data from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction>Continue</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+               
               </span>
             </div>
 
@@ -165,7 +196,7 @@ const TweetBox = ({ tweet, content }: any) => {
                       setLiked(false);
                       setNoOfLikes((e:any) => e - 1);
                       e.stopPropagation();
-    e.preventDefault();
+                      e.preventDefault();
                     }}
                   >
                     <FaHeart />

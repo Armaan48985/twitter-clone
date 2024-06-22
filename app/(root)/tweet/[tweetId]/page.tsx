@@ -136,8 +136,8 @@ const Page = () => {
       router.refresh()
     }
   }
-
-  console.log(tweetUser.avatar)
+  
+  console.log(tweetUser)
 
   return (
     <div>
@@ -150,7 +150,6 @@ const Page = () => {
         <div className="flex relative">
               <Sidebar />
               <main className="main-section">
-            
                   <>
                     <div className="bg-black z-10 flex items-center gap-6 border-b-2 border-[var(--primary-gray)] p-2 pl-6 h-[60px] sticky top-0 left-0 bg-opacity-65">
                         <div className='flex items-center gap-4'>

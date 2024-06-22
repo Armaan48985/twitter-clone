@@ -30,6 +30,8 @@ const Profile = () => {
   const [editable, setEditable] = useState(false);
   const [currUserData, setCurrUserData] = useState<User | null>(null);
   const [following, setFollowing] = useState(false)
+  const [followingCount, setFollowingCount] = useState(0)
+  const [followersCount, setFollowersCount] = useState(0)
   const pathname = useParams();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -72,8 +74,6 @@ const Profile = () => {
         .eq("user", currUser.userId)
         .eq("following", id);
 
-        console.log(data)
-
       if (data && data.length > 0) {
         setFollowing(true);
         router.refresh();
@@ -81,6 +81,26 @@ const Profile = () => {
     
     }
 
+    const getFollowingCount = async () => {
+      const { data:followingData } = await supabase
+        .from("followers")
+        .select("*")
+        .eq("user", id);
+
+      const { data:followerData } = await supabase
+        .from("followers")
+        .select("*")
+        .eq("following", id);
+
+      if (followerData) {
+        setFollowersCount(followerData.length);
+      }
+      if(followingData){
+        setFollowingCount(followingData.length)
+      }
+    }
+
+    getFollowingCount()
     checkFollow(); 
     fetchData();
     getUser();
@@ -228,8 +248,8 @@ const Profile = () => {
                   </div>
 
                   <div className="flex gap-6 mt-3">
-                    <p>0 Followers</p>
-                    <p>0 Following</p>
+                    <p>{followersCount} Followers</p>
+                    <p>{followingCount} Following</p>
                   </div>
                 </div>
               </div>
