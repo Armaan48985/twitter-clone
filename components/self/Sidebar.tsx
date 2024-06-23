@@ -62,7 +62,7 @@ const Sidebar = () => {
         </ul>
 
         <div className="mt-4 ml-3">
-          <PostButton classname="px-[5.7rem] py-6 text-lg font-normal" name="Post" />
+          <PostButton classname="px-[5.7rem] py-[1.6rem] text-lg font-normal" name="Post" />
         </div>
       </div>
 

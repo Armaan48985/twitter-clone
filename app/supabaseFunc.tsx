@@ -64,6 +64,27 @@ export const setUserDataa = async (setCurrUserData: React.Dispatch<React.SetStat
   }
 };
 
+export const getTweets = async ({setTweets, setLoading}:any) => {
+  const { data, error } = await supabase.from('tweets').select('*');
+    if (error) {
+      console.error('Error fetching tweets:', error);
+    } else {
+      setTweets(data);
+      setLoading(false);
+    }
+}
+
+
+export const getPosts = async ({setPosts, id}:any) => {
+  const { data, error } = await supabase.from('tweets').select('*').eq('created_by', id);
+    if (error) {
+      console.error('Error fetching posts:', error);
+    } else {
+      setPosts(data);
+    }
+
+}
+
 
 export const logOut = async () => {
   await supabase.auth.signOut()

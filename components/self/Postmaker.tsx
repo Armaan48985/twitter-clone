@@ -39,9 +39,9 @@ const Postmaker = ({ tweet, setTweet, currUser }: any) => {
   return (
     <div className="w-full h-auto border-b-[1px] border-[var(--primary-gray)] p-4 flex">
       <div className="h-full">
-        <Image src={currUser.avatar} alt="avatar" width={50} height={50} className="rounded-full mt-2" />
+        <Image src={currUser.avatar} alt="avatar" width={45} height={45} className="rounded-full mt-2" />
       </div>
-      <div className="flex items-start flex-col gap-2 ml-4">
+      <div className="flex items-start flex-col gap-2 ml-3">
         <Input
           value={tweet}
           onChange={(e) => setTweet(e.target.value)}

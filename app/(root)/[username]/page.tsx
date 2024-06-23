@@ -4,7 +4,6 @@ import { RootState } from "@/app/GlobalRedux/store";
 import EditProfile from "@/components/self/EditProfile";
 import RightSidebar from "@/components/self/RightSidebar";
 import Sidebar from "@/components/self/Sidebar";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,8 +13,26 @@ import { CiLocationOn } from "react-icons/ci";
 import { FaArrowLeftLong, FaRegUser } from "react-icons/fa6";
 import { IoLink } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { User } from "../home/page";
-import { setUserDataa } from "@/app/supabaseFunc";
+import { Tweet, User } from "../home/page";
+import { getPosts, setUserDataa } from "@/app/supabaseFunc";
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import TweetBox from "@/components/self/TweetBox";
 
 const Profile = () => {
   const [id, setId] = useState("");
@@ -32,6 +49,7 @@ const Profile = () => {
   const [following, setFollowing] = useState(false)
   const [followingCount, setFollowingCount] = useState(0)
   const [followersCount, setFollowersCount] = useState(0)
+  const [posts, setPosts] = useState<Tweet[]>([]);
   const pathname = useParams();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -81,30 +99,40 @@ const Profile = () => {
     
     }
 
-    const getFollowingCount = async () => {
-      const { data:followingData } = await supabase
-        .from("followers")
-        .select("*")
-        .eq("user", id);
-
-      const { data:followerData } = await supabase
-        .from("followers")
-        .select("*")
-        .eq("following", id);
-
-      if (followerData) {
-        setFollowersCount(followerData.length);
-      }
-      if(followingData){
-        setFollowingCount(followingData.length)
-      }
-    }
-
-    getFollowingCount()
-    checkFollow(); 
-    fetchData();
+   
     getUser();
-  }, [pathname, openEditBox]);
+    fetchData();
+    checkFollow(); 
+  }, [pathname]);
+
+  console.log(posts[0]?.id)
+
+
+  const getFollowingCount = async () => {
+    const { data:followingData } = await supabase
+      .from("followers")
+      .select("*")
+      .eq("user", id);
+
+    const { data:followerData } = await supabase
+      .from("followers")
+      .select("*")
+      .eq("following", id);
+
+    if (followerData) {
+      setFollowersCount(followerData.length);
+    }
+    if(followingData){
+      setFollowingCount(followingData.length)
+    }
+  }
+
+  useEffect(() => {
+    if(id){
+      getPosts({ id, setPosts })
+      getFollowingCount()
+    }
+  }, [id])
 
   if(currUserData){
     dispatch(setUserData({
@@ -163,7 +191,7 @@ const Profile = () => {
           </div>
         ) : (
           <>
-            <div className="bg-black z-10 flex items-center gap-6 border-b-2 border-[var(--primary-gray)] p-2 pl-6 h-[60px] sticky top-0 left-0 bg-opacity-65">
+            <div className="bg-black z-10 flex items-center gap-6 border-b-2 border-[var(--primary-light-gray)] p-2 pl-6 h-[60px] sticky top-0 left-0 bg-opacity-65">
               <Link href="/">
                 <span className="text-lg">
                   <FaArrowLeftLong />
@@ -177,29 +205,29 @@ const Profile = () => {
 
             <div className="h-[160px] bg-slate-800">{/* image */}</div>
 
-            <div className="border-b-2 border-[var(--primary-gray)] pb-4 pl-5">
-              <div className="p-3">
-                <div
-                  className={`flex justify-end py-6 relative ${
-                    !editable && "mb-10"
-                  }`}
-                >
-                  {editable ? (
-                    <Button
-                      variant="outline"
-                      className="border-[var(--primary-gray)] rounded-3xl"
-                      onClick={() => setOpenEditBox(true)}
-                    >
-                      Edit Profile
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      className="border-[var(--primary-gray)] rounded-3xl"
-                      onClick={following ? unfollowUser : followUser}
-                    >
-                     {following ? 'following' : 'Follow'}
-                    </Button>
+              <div className="pb-4">
+                <div className="p-3 pl-8">
+                  <div
+                    className={`flex justify-end py-6 relative ${
+                      !editable && "mb-10"
+                    }`}
+                  >
+                    {editable ? (
+                      <Button
+                        variant="outline"
+                        className="border-[var(--primary-gray)] rounded-3xl"
+                        onClick={() => setOpenEditBox(true)}
+                      >
+                        Edit Profile
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        className="border-[var(--primary-gray)] rounded-3xl"
+                        onClick={following ? unfollowUser : followUser}
+                      >
+                      {following ? 'following' : 'Follow'}
+                      </Button>
                   )}
                   <div className="absolute top-[-4rem] left-3 border-black border-4 shadow-xl text-xl bg-yellow-800 rounded-full">
                     {avatar ? (
@@ -252,6 +280,30 @@ const Profile = () => {
                     <p>{followingCount} Following</p>
                   </div>
                 </div>
+              </div>
+
+
+              <div className="mt-4">
+                <Tabs defaultValue="posts" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3 border-b-[1px] pb-10 border-[var(--primary-gray)] rounded-none">
+                    <TabsTrigger value="posts" className="pb-2 relative rounded-none font-bold text-md aria-selected:after:content-[''] aria-selected:after:block aria-selected:after:w-14 aria-selected:after:h-[.22rem] aria-selected:after:bg-[#2B91DE] aria-selected:after:rounded-2xl aria-selected:after:absolute aria-selected:after:bottom-0 aria-selected:after:left-1/2 aria-selected:after:transform aria-selected:after:-translate-x-1/2">Posts</TabsTrigger>
+                    <TabsTrigger value="likes" className="pb-2 relative rounded-none font-bold text-md aria-selected:after:content-[''] aria-selected:after:block aria-selected:after:w-14 aria-selected:after:h-[.22rem] aria-selected:after:bg-[#2B91DE] aria-selected:after:rounded-2xl aria-selected:after:absolute aria-selected:after:bottom-0 aria-selected:after:left-1/2 aria-selected:after:transform aria-selected:after:-translate-x-1/2">Likes</TabsTrigger>
+                    <TabsTrigger value="bookmarks" className="pb-2 relative rounded-none font-bold text-md aria-selected:after:content-[''] aria-selected:after:block aria-selected:after:w-14 aria-selected:after:h-[.22rem] aria-selected:after:bg-[#2B91DE] aria-selected:after:rounded-2xl aria-selected:after:absolute aria-selected:after:bottom-0 aria-selected:after:left-1/2 aria-selected:after:transform aria-selected:after:-translate-x-1/2">Bookmarks</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="posts">
+                      {posts ? posts.map((post, i) => (
+                         <TweetBox tweet={post} content={post.tweet} key={i} />
+                      )) : (
+                        <p>No Posts  </p>
+                      )}
+                  </TabsContent>
+                  <TabsContent value="likes">
+                 
+                  </TabsContent>
+                  <TabsContent value="bookmarks">
+                 
+                 </TabsContent>
+                </Tabs>
               </div>
             </div>
           </>

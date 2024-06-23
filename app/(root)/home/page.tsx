@@ -16,10 +16,10 @@ import { setUserData } from '@/app/GlobalRedux/Feature/counter/counterSlice'
 import { RootState } from '@/app/GlobalRedux/store'
 import TweetBox from '@/components/self/TweetBox'
 import { Input } from '@/components/ui/input'
-import { setUserDataa } from '@/app/supabaseFunc'
+import { getTweetUser, getTweets, setUserDataa } from '@/app/supabaseFunc'
 
 
-type Tweet = {
+export type Tweet = {
   id: string;
   tweet: string;
   created_by: string;
@@ -56,24 +56,13 @@ const Homee = () => {
 
  
     useEffect(() => {
-        const getTweets = async () => {
-          const { data, error } = await supabase.from('tweets').select('*');
-            if (error) {
-              console.error('Error fetching tweets:', error);
-            } else {
-              setTweets(data);
-              setLoading(false);
-            }
-        }
-
-        const fetchData = async () => {
-          await setUserDataa(setCurrUserData);
-        };
-
+      const fetchData = async () => {
+        await setUserDataa(setCurrUserData);
+      };
        
 
         fetchData();
-        getTweets()
+        getTweets({setTweets, setLoading})
     }, [])
 
     if(currUserData){
