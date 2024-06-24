@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./GlobalRedux/provider";
 
 const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({ 
+    subsets: ["latin"],
+    weight: ['400', '600']
+   });
+
 
 export const metadata: Metadata = {
   title: "X",
@@ -17,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-          <body className="w-full flex justify-center bg-black text-white">
+          <body className={`w-full flex justify-center bg-black text-white ${poppins.className}`}>
             <Providers>
               {children}
             </Providers>
