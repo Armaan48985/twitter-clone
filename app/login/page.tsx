@@ -15,6 +15,7 @@ export default function Login() {
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
   const[user, setUser] = useState<any>(null);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +49,10 @@ export default function Login() {
   const path = usePathname();
 
   useEffect(() => {
-    if (path && path.includes('/username')) {
-      window.location.reload();
-    }
+      if (path === '/username' || path.includes('username')) {
+        router.push('/username')
+        window.location.reload();
+      }
 }, []);
 
   const loginWithGoogle = async () => {
@@ -63,6 +65,10 @@ export default function Login() {
           redirectTo: `${window.location.origin}/username`
         },
       });
+
+      if(data){
+        setLoggedIn(true)
+      }
 
       if (error) {
         setMessage(`Google login error: ${error.message}`);
