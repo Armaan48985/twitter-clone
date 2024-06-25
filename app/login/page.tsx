@@ -49,7 +49,7 @@ export default function Login() {
   const path = usePathname();
 
   useEffect(() => {
-      if (path === '/username' || path.includes('username')) {
+      if (path === '/username') {
         router.push('/username')
         window.location.reload();
       }
