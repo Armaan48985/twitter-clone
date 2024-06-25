@@ -100,10 +100,12 @@ export default function Login() {
 
           <div className="flex-grow border-t border-gray-300 mt-4"></div>
   
-          <button onClick={loginWithGoogle} className="bg-white hover:scale-[1.03] duration-500 text-gray-800 mt-10 px-16 py-2 font-bold rounded-2xl flex-center gap-3">
+          <p className="text-[12px] mt-10 text-red-400">*(google login preferred)</p>
+          <button onClick={loginWithGoogle} className="bg-white hover:scale-[1.03] duration-500 text-gray-800 mt-2 px-16 py-2 font-bold rounded-2xl flex-center gap-3">
             <span className="text-green-700 text-lg"><FaGoogle/></span>
             Sign In with Google
-            </button>
+          </button>
+
 
         </div>
     </div>
