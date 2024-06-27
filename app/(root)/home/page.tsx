@@ -59,8 +59,6 @@ const Homee = () => {
       const fetchData = async () => {
         await setUserDataa(setCurrUserData);
       };
-       
-
         fetchData();
         getTweets({setTweets, setLoading})
     }, [])

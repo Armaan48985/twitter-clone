@@ -4,6 +4,11 @@ import { useSelector } from "react-redux"
 
 
 export const postTweet = async ({tweet, currUser}:{tweet:string , currUser: string}) => {
+
+    if(!currUser){
+      logOut()
+    }
+
     if(tweet.length > 0) {
       console.log('working')
     try {
@@ -37,6 +42,10 @@ export const postTweet = async ({tweet, currUser}:{tweet:string , currUser: stri
 
 
 export const postComment = async ({currUser, tweet, content}:any) => {
+  if(!currUser){
+    logOut()
+  }
+
   const{data, error} = await supabase.from('comments').insert([{comment: content, created_by: currUser.userId, comment_on: tweet.id}]).select('*')
   
   if(data){

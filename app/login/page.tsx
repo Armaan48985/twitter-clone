@@ -1,10 +1,9 @@
 'use client';
+
 import { supabase } from "@/lib/supabase";
-import { error } from "console";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa6";
-
 
 export default function Login() {
   const [data, setData] = useState({
@@ -14,22 +13,19 @@ export default function Login() {
 
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
-  const[user, setUser] = useState<any>(null);
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
-  
+
   const login = async () => {
     setMessage(null); // Reset message
     try {
-      const { data: dataUser, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password
       });
@@ -49,30 +45,25 @@ export default function Login() {
   const path = usePathname();
 
   useEffect(() => {
-      if (path === '/username') {
-        router.push('/username')
-        window.location.reload();
-      }
-}, []);
+    if (path === '/username') {
+      router.push('/username');
+      window.location.reload();
+    }
+  }, [path, router]);
 
   const loginWithGoogle = async () => {
     setMessage(null);
 
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/username`
-        },
+        }
       });
-
-      if(data){
-        setLoggedIn(true)
-      }
 
       if (error) {
         setMessage(`Google login error: ${error.message}`);
-        return
       }
     } catch (error) {
       console.error('OAuth login error:', error);
@@ -80,40 +71,62 @@ export default function Login() {
     }
   };
 
-
   return (
     <div className="w-full min-h-screen flex-center bg-[#000]">
-        <div className="bg-[#1a1a1a] p-10 rounded-2xl shadow-lg shadow-gray-900 text-center px-16 flex flex-col">
-
-          {message && (
-            <div>
-              <p className="text-md text-green-500">{message}</p>
-            </div>
-          )}
-
-          <div className="mt-6">
-            <h1 className="main_heading font-normal">Welcome!!</h1>
-            <p className="gray_text">Please login to your account</p>
-          </div>  
-
-          <div className="mt-10 flex flex-col gap-5">
-            <input className="pl-3 pr-16 outline-none hover:scale-[1.03] duration-500 rounded-lg placeholder:text-gray-500 placeholder:text-sm text-start py-1 text-black" type="email" name="email" onChange={handleChange} value={data.email} placeholder="example@gmail.com"/>
-            <input className="pl-3 pr-16 outline-none hover:scale-[1.03] duration-500 rounded-lg placeholder:text-gray-500 placeholder:text-sm text-start py-1 text-black" type="text" name="password" onChange={handleChange} value={data.password} placeholder="Enter Password"/>
+      <div className="bg-[#1a1a1a] p-10 rounded-2xl shadow-lg shadow-gray-900 text-center px-16 flex flex-col">
+        {message && (
+          <div>
+            <p className="text-md text-green-500">{message}</p>
           </div>
+        )}
 
-          <button onClick={login} className="px-16 py-2 bg-red-400 text-xl duration-500 hover:scale-[1.03] font-bold mt-8 rounded-lg uppercase">Login</button>
-          <a href="/" className="gray_text hover:underline my-4">Forgot Password</a>
-
-          <div className="flex-grow border-t border-gray-300 mt-4"></div>
-  
-          <p className="text-[12px] mt-10 text-red-400">*(google login preferred)</p>
-          <button onClick={loginWithGoogle} className="bg-white hover:scale-[1.03] duration-500 text-gray-800 mt-2 px-16 py-2 font-bold rounded-2xl flex-center gap-3">
-            <span className="text-green-700 text-lg"><FaGoogle/></span>
-            Sign In with Google
-          </button>
-
-
+        <div className="mt-6">
+          <h1 className="main_heading font-normal">Welcome!!</h1>
+          <p className="gray_text">Please login to your account</p>
         </div>
+
+        <div className="mt-10 flex flex-col gap-5">
+          <input
+            className="pl-3 pr-16 outline-none hover:scale-[1.03] duration-500 rounded-lg placeholder:text-gray-500 placeholder:text-sm text-start py-1 text-black"
+            type="email"
+            name="email"
+            onChange={handleChange}
+            value={data.email}
+            placeholder="example@gmail.com"
+          />
+          <input
+            className="pl-3 pr-16 outline-none hover:scale-[1.03] duration-500 rounded-lg placeholder:text-gray-500 placeholder:text-sm text-start py-1 text-black"
+            type="password"
+            name="password"
+            onChange={handleChange}
+            value={data.password}
+            placeholder="Enter Password"
+          />
+        </div>
+
+        <button
+          onClick={login}
+          className="px-16 py-2 bg-red-400 text-xl duration-500 hover:scale-[1.03] font-bold mt-8 rounded-lg uppercase"
+        >
+          Login
+        </button>
+        <a href="/" className="gray_text hover:underline my-4">
+          Forgot Password
+        </a>
+
+        <div className="flex-grow border-t border-gray-300 mt-4"></div>
+
+        <p className="text-[12px] mt-10 text-red-400">*(google login preferred)</p>
+        <button
+          onClick={loginWithGoogle}
+          className="bg-white hover:scale-[1.03] duration-500 text-gray-800 mt-2 px-16 py-2 font-bold rounded-2xl flex-center gap-3"
+        >
+          <span className="text-green-700 text-lg">
+            <FaGoogle />
+          </span>
+          Sign In with Google
+        </button>
+      </div>
     </div>
   );
 }

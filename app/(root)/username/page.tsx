@@ -90,7 +90,7 @@ const Username = () => {
     <div className='w-full min-h-screen flex-center'>
       <div className='bg-[#1a1a1a] p-10 rounded-xl py-14'>
           <div className='p-5 rounded-t-xl text-white bg-[#282828] my-3 py-10 px-6 relative'>
-            <Image src={avatar} alt='avatar' width={80} height={80} className='rounded-full absolute top-[-2.5rem] left-[8rem] bg-red-500 ' />
+            <Image src={avatar} alt='avatar' width={90} height={90} className='rounded-full absolute top-[-2.6rem] left-[9rem] bg-red-500 ' />
               <h1 className='py-4 text-xl font-bold pr-10 mt-5'>Choose a username for you !</h1>
               <Input
                 type='text'
