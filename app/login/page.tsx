@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaGoogle } from "react-icons/fa6";
 
 export default function Login() {
@@ -13,6 +13,7 @@ export default function Login() {
 
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
+  const hasRunRef = useRef(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,14 +44,14 @@ export default function Login() {
   };
 
   const path = usePathname();
-
   useEffect(() => {
-    if (path === '/username') {
-      router.push('/username');
-      window.location.reload();
+    if (!hasRunRef.current) { // Check if the effect has run
+      hasRunRef.current = true; // Mark the effect as run
+      if (path === '/username') {
+        window.location.reload();
+      }
     }
   }, [path, router]);
-
   const loginWithGoogle = async () => {
     setMessage(null);
 
