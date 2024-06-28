@@ -44,19 +44,17 @@ export default function Login() {
   };
 
   const path = usePathname();
-  useEffect(() => {
-    if (!hasRunRef.current) { // Check if the effect has run
-      hasRunRef.current = true; // Mark the effect as run
+
       if (path === '/username') {
-        window.location.reload();
+        router.push('/username');
+        router.refresh();
       }
-    }
-  }, [path, router]);
+
   const loginWithGoogle = async () => {
     setMessage(null);
 
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/username`
